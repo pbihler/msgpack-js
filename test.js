@@ -40,6 +40,31 @@ test('codec works as expected', function(assert) {
 
 });
 
+test('DecodeAsList works', function(assert) {
+  var allPacked = Buffer.concat(tests.map(function(input) {
+    return msgpack.encode(input);
+  }));
+
+  var allUnpacked = msgpack.decodeAsList(allPacked);
+  assert.equal(tests.length,allUnpacked.length);
+
+  for (var index = 0; index <= tests.length; index++) {
+    var input = tests[index];
+    var output = allUnpacked[index];
+    if (bops.is(input)) {
+      assert.true(bops.is(output));
+      for (var i = 0, l = input.length; i < l; i++) {
+        assert.equal(input[i], output[i]);
+      }
+      assert.equal(input.length, output.length);
+    }
+    else {
+      assert.deepEqual(input, output);
+    }
+  }
+  assert.end();
+});
+
 function Foo () {
   this.instance = true
 }

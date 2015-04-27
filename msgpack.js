@@ -13,11 +13,12 @@ exports.encode = function (value) {
 };
 
 exports.decode = decode;
+exports.decodeAsList = decodeAsList;
 
 // https://gist.github.com/frsyuki/5432559 - v5 spec
 //
 // I've used one extension point from `fixext 1` to store `undefined`. On the wire this
-// should translate to exactly 0xd40000 
+// should translate to exactly 0xd40000
 //
 // +--------+--------+--------+
 // |  0xd4  |  0x00  |  0x00  |
@@ -265,6 +266,18 @@ function decode(buffer) {
   var value = decoder.parse();
   if (decoder.offset !== buffer.length) throw new Error((buffer.length - decoder.offset) + " trailing bytes");
   return value;
+}
+function decodeAsList(buffer) {
+  var list = [];
+  var listOffset = 0;
+  var decoder = new Decoder(buffer);
+  while (decoder.offset + listOffset < buffer.length) {
+    var value = decoder.parse();
+    list.push(value);
+    listOffset += decoder.offset;
+    decoder = new Decoder(buffer.slice(listOffset));
+  }
+  return list;
 }
 
 function encodeableKeys (value) {
@@ -591,5 +604,3 @@ function sizeof(value) {
     return 0
   throw new Error("Unknown type " + type);
 }
-
-

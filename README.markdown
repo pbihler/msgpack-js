@@ -17,6 +17,10 @@ Please feel free to open issues/pull requests for support/discussion.
 $ npm i msgpack-js-v5 --save
 ```
 
+# Own extension:
+
+`decodeAsList(buffer)`: Returns an array of all concatenated objects found in the buffer.
+
 # EXTENSION
 
 Since there is no way to encode `undefined` inside the msgpack spec, an extension point is
@@ -48,4 +52,3 @@ this module could just be merged into the original `msgpack-js` module.
 
  [0]: https://github.com/creationix/msgpack-js
  [1]: https://github.com/creationix/msgpack-js/blob/master/README.markdown
-
